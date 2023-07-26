@@ -1,15 +1,16 @@
 from django.shortcuts import render
-from django.http.response import JsonResponse
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
- # Create your views here.
- 
-@csrf_exempt
-def aPage(request):
-    user=User.objects.get(pk=1)
-    username= request.POST.get("username")
-    email= request.POST.get("email")
-    print(email)
-    print(username)
+from django.http import JsonResponse
+from django.contrib.auth import authenticate
 
-    return JsonResponse({"UserName":user.username, "email": user.email})
+def aPage(request):
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            # Inicio de sesión exitoso
+            return JsonResponse({"message": "Inicio de sesión exitoso", "username": user.username, "email": user.email})
+        else:
+            # Credenciales incorrectas o usuario no registrado
+            return JsonResponse({"message": "Usuario no registrado o credenciales incorrectas"})

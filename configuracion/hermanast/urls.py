@@ -3,5 +3,5 @@ from .views import aPage
 
     
 urlpatterns = [
-    path('a', aPage),
+   path('api/login/', aPage, name='login'),
 ]
